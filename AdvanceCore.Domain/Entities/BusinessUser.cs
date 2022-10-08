@@ -8,7 +8,17 @@ public class BusinessUser
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
-    public ApplicationUser ApplicationUser { get; set; } = null!;
+    public Guid BusinessId { get; set; }
+    [Required]
+    public Business Business { get; set; } = null!;
+
+    [Required]
+    public string UserId { get; set; } = null!;
+    [Required]
+    public ApplicationUser User { get; set; } = null!;
+
+    [Required]
+    public string CreatedBy { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

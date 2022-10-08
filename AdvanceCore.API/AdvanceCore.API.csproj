@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AdvanceCore.Infrastructure\AdvanceCore.Infrastructure.csproj" />
+    <ProjectReference Include="..\AdvanceCore.Contracts\AdvanceCore.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

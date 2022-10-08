@@ -10,7 +10,6 @@ public class Business
     [Required]
     public string Name { get; set; } = string.Empty;
 
-    [Required]
     public List<BusinessUser> BusinessUsers { get; set; } = null!;
 
     [Required]

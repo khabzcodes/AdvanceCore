@@ -1,9 +1,9 @@
-using AdvanceCore.Application.Configuration.Data;
+using AdvanceCore.Application.Common.Interface.Data;
 using AdvanceCore.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdvanceCore.Infrastructure.Database;
+namespace AdvanceCore.Infrastructure.Persistence;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
 {
@@ -18,6 +18,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
         base.OnModelCreating(builder);
     }
 
-    public DbSet<Business> Businesses { get; set; }
-    public DbSet<BusinessUser> BusinessUsers { get; set; }
+    public DbSet<Business> Businesses { get; set; } = null!;
+    public DbSet<BusinessUser> BusinessUsers { get; set; } = null!;
 }
