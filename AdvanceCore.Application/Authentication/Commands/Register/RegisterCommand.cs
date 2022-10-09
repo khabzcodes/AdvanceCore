@@ -10,4 +10,4 @@ public record RegisterCommand(
     string password,
     string companyName,
     string companyEmail
-) : IRequest<Result<AuthenticationResult>>;
+) : IRequest<AuthenticationResult>;

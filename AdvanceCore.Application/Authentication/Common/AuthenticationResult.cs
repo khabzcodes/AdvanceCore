@@ -1,5 +1,6 @@
 namespace AdvanceCore.Application.Authentication;
 
-public record AuthenticationResult(
-    string Token
-);
+public record AuthenticationResult
+{
+    public string Token { get; set; } = string.Empty;
+}

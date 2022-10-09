@@ -6,26 +6,28 @@ using AdvanceCore.Application.Common.Interface.Authentication;
 
 namespace AdvanceCore.Application.Authentication.Commands.Register;
 
-public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<AuthenticationResult>>
+public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthenticationResult>
 {
     private readonly IIdentityUserRepository _identityUserRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IMediator _mediator;
 
     public RegisterCommandHandler(
         IIdentityUserRepository identityUserRepository,
-        IJwtTokenGenerator jwtTokenGenerator)
+        IJwtTokenGenerator jwtTokenGenerator,
+        IMediator mediator)
     {
         _identityUserRepository = identityUserRepository;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _mediator = mediator;
     }
 
-    public async Task<Result<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
+    public async Task<AuthenticationResult> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
         if (await _identityUserRepository.GetApplicationUserByEmailAsync(command.email) is not null)
         {
             // Return user already exist error message
         }
-        //TODO: Validate company email domain
 
         ApplicationUser user = new()
         {
@@ -51,6 +53,6 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<Au
             // Return server error
         }
 
-        return new AuthenticationResult(Token: jwtToken);
+        return new AuthenticationResult() { Token = jwtToken };
     }
 }
