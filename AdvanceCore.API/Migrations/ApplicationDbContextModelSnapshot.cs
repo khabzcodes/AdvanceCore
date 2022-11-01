@@ -111,6 +111,10 @@ namespace AdvanceCore.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -136,6 +140,9 @@ namespace AdvanceCore.API.Migrations
                     b.Property<Guid>("OrganizationId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("OrganizationUserRoleId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -143,6 +150,8 @@ namespace AdvanceCore.API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrganizationId");
+
+                    b.HasIndex("OrganizationUserRoleId");
 
                     b.HasIndex("UserId");
 
@@ -305,6 +314,12 @@ namespace AdvanceCore.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AdvanceCore.Domain.Entities.OrganizationUserRole", "OrganizationUserRole")
+                        .WithMany()
+                        .HasForeignKey("OrganizationUserRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("AdvanceCore.Domain.Entities.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -312,6 +327,8 @@ namespace AdvanceCore.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Organization");
+
+                    b.Navigation("OrganizationUserRole");
 
                     b.Navigation("User");
                 });

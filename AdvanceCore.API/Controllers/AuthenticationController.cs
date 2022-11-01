@@ -29,7 +29,7 @@ public class AuthenticationController : ApiController
             request.companyEmail
             );
 
-        ErrorOr<AuthenticationResult> authResult = await _mediator.Send(command, cancellationToken);
+        ErrorOr<RegisterResponse> authResult = await _mediator.Send(command, cancellationToken);
 
         return authResult.Match(
             authResult => Ok(authResult),

@@ -1,5 +1,5 @@
 namespace AdvanceCore.Application.Authentication;
 
-public record AuthenticationResult(
+public record RegisterResponse(
     string Token
 );

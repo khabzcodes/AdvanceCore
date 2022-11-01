@@ -57,6 +57,7 @@ namespace AdvanceCore.API.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -189,6 +190,7 @@ namespace AdvanceCore.API.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrganizationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrganizationUserRoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -206,6 +208,12 @@ namespace AdvanceCore.API.Migrations
                         name: "FK_OrganizationUsers_Organizations_OrganizationId",
                         column: x => x.OrganizationId,
                         principalTable: "Organizations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrganizationUsers_OrganizationUserRoles_OrganizationUserRoleId",
+                        column: x => x.OrganizationUserRoleId,
+                        principalTable: "OrganizationUserRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -255,6 +263,11 @@ namespace AdvanceCore.API.Migrations
                 column: "OrganizationId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrganizationUsers_OrganizationUserRoleId",
+                table: "OrganizationUsers",
+                column: "OrganizationUserRoleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrganizationUsers_UserId",
                 table: "OrganizationUsers",
                 column: "UserId");
@@ -278,9 +291,6 @@ namespace AdvanceCore.API.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "OrganizationUserRoles");
-
-            migrationBuilder.DropTable(
                 name: "OrganizationUsers");
 
             migrationBuilder.DropTable(
@@ -291,6 +301,9 @@ namespace AdvanceCore.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Organizations");
+
+            migrationBuilder.DropTable(
+                name: "OrganizationUserRoles");
         }
     }
 }
