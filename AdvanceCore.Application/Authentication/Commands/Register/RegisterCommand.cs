@@ -10,4 +10,4 @@ public record RegisterCommand(
     string password,
     string companyName,
     string companyEmail
-) : IRequest<ErrorOr<RegisterResponse>>;
+) : IRequest<ErrorOr<AuthResponse>>;

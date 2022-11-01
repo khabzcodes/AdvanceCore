@@ -1,5 +1,6 @@
 using AdvanceCore.Application.Authentication;
 using AdvanceCore.Application.Authentication.Commands.Register;
+using AdvanceCore.Application.Authentication.Queries.Login;
 using AdvanceCore.Contracts.Authentication;
 using ErrorOr;
 using MapsterMapper;
@@ -29,7 +30,19 @@ public class AuthenticationController : ApiController
             request.companyEmail
             );
 
-        ErrorOr<RegisterResponse> authResult = await _mediator.Send(command, cancellationToken);
+        ErrorOr<AuthResponse> authResult = await _mediator.Send(command, cancellationToken);
+
+        return authResult.Match(
+            authResult => Ok(authResult),
+            errors => Problem(errors));
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginRequest request, CancellationToken cancellationToken)
+    {
+        var query = new LoginQuery(request.email, request.password);
+
+        ErrorOr<AuthResponse> authResult = await _mediator.Send(query, cancellationToken);
 
         return authResult.Match(
             authResult => Ok(authResult),

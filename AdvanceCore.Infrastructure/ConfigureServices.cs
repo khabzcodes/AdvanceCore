@@ -55,7 +55,6 @@ public static class ConfigureServices
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
-        services.AddScoped<IIdentityUserRepository, IdentityUserRepository>();
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         services.AddScoped<IOrganizationUserRepository, OrganizationUserRepository>();
         services.AddScoped<IOrganizationUserRoleRepository, OrganizationUserRoleRepository>();

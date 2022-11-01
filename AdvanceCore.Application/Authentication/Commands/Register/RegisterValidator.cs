@@ -2,16 +2,17 @@ using AdvanceCore.Application.Persistence;
 using AdvanceCore.Domain.Entities;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 
 namespace AdvanceCore.Application.Authentication.Commands.Register;
 
 public class RegisterValidator : AbstractValidator<RegisterCommand>
 {
-    private readonly IIdentityUserRepository _identityUserRepository;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public RegisterValidator(IIdentityUserRepository identityUserRepository)
+    public RegisterValidator(UserManager<ApplicationUser> userManager)
     {
-        _identityUserRepository = identityUserRepository;
+        _userManager = userManager;
 
         // First name
         RuleFor(x => x.firstName).NotEmpty().WithMessage("First name is required")
@@ -54,7 +55,7 @@ public class RegisterValidator : AbstractValidator<RegisterCommand>
 
     public bool BeUniqueEmailAddress(string email)
     {
-        ApplicationUser? user = _identityUserRepository.GetApplicationUserByEmailAsync(email).Result;
+        ApplicationUser? user = _userManager.FindByEmailAsync(email).Result;
 
         return user != null ? false : true;
     }

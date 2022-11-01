@@ -4,35 +4,33 @@ using AdvanceCore.Application.Persistence;
 using AdvanceCore.Domain.Entities;
 using AdvanceCore.Domain.Constants;
 using AdvanceCore.Application.Common.Interface.Authentication;
+using Microsoft.AspNetCore.Identity;
 
 namespace AdvanceCore.Application.Authentication.Commands.Register;
 
-public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<RegisterResponse>>
+public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthResponse>>
 {
-    private readonly IIdentityUserRepository _identityUserRepository;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly IOrganizationRepository _organizationRepository;
     private readonly IOrganizationUserRepository _organizationUserRepository;
     private readonly IOrganizationUserRoleRepository _organizationUserRoleRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
-    private readonly IMediator _mediator;
 
     public RegisterCommandHandler(
-        IIdentityUserRepository identityUserRepository,
+        UserManager<ApplicationUser> userManager,
         IOrganizationRepository organizationRepository,
         IOrganizationUserRepository organizationUserRepository,
         IOrganizationUserRoleRepository organizationUserRoleRepository,
-        IJwtTokenGenerator jwtTokenGenerator,
-        IMediator mediator)
+        IJwtTokenGenerator jwtTokenGenerator)
     {
-        _identityUserRepository = identityUserRepository;
+        _userManager = userManager;
         _organizationRepository = organizationRepository;
         _organizationUserRepository = organizationUserRepository;
         _organizationUserRoleRepository = organizationUserRoleRepository;
         _jwtTokenGenerator = jwtTokenGenerator;
-        _mediator = mediator;
     }
 
-    public async Task<ErrorOr<RegisterResponse>> Handle(RegisterCommand command, CancellationToken cancellationToken)
+    public async Task<ErrorOr<AuthResponse>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
         ApplicationUser user = new()
         {
@@ -42,9 +40,9 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<R
             Email = command.email
         };
         // Insert user details to db
-        var createUserResult = await _identityUserRepository.CreateApplicationUser(user, command.password);
+        var createUserResult = await _userManager.CreateAsync(user, command.password);
 
-        await _identityUserRepository.AssignRoleToUserAsync(user, Constants.UserRole);
+        await _userManager.AddToRoleAsync(user, Constants.UserRole);
         // Generate jwt token
         var jwtToken = _jwtTokenGenerator.GenerateJwtToken(user.Id);
         // Insert organization to db
@@ -60,8 +58,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<R
 
         OrganizationUserRole? adminRole = _organizationUserRoleRepository.GetOrganizationUserRoleByName(Constants.Administrator);
 
-        // TODO: return a detailed error message
-        if (adminRole == null) throw new Exception("");
+        if (adminRole == null) return Error.Failure();
 
         // Insert organization user to db
         OrganizationUser organizationUser = new()
@@ -74,6 +71,6 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<R
 
         _organizationUserRepository.AddOrganizationUser(organizationUser);
 
-        return new RegisterResponse(Token: jwtToken);
+        return new AuthResponse(Token: jwtToken);
     }
 }
