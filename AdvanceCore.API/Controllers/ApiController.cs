@@ -8,7 +8,6 @@ public class ApiController : ControllerBase
 {
     protected IActionResult Problem(List<Error> errors)
     {
-
         var firstError = errors[0];
 
         var statusCode = firstError.Type switch
@@ -16,6 +15,7 @@ public class ApiController : ControllerBase
             ErrorType.Conflict => StatusCodes.Status409Conflict,
             ErrorType.Validation => StatusCodes.Status400BadRequest,
             ErrorType.NotFound => StatusCodes.Status404NotFound,
+            ErrorType.Unexpected => StatusCodes.Status401Unauthorized,
             _ => StatusCodes.Status500InternalServerError,
         };
 

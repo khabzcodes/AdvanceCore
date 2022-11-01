@@ -52,17 +52,30 @@ namespace AdvanceCore.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Businesses",
+                name: "Organizations",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Businesses", x => x.Id);
+                    table.PrimaryKey("PK_Organizations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrganizationUserRoles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrganizationUserRoles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -172,28 +185,35 @@ namespace AdvanceCore.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BusinessUsers",
+                name: "OrganizationUsers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    BusinessId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrganizationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrganizationUserRoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BusinessUsers", x => x.Id);
+                    table.PrimaryKey("PK_OrganizationUsers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BusinessUsers_AspNetUsers_UserId",
+                        name: "FK_OrganizationUsers_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BusinessUsers_Businesses_BusinessId",
-                        column: x => x.BusinessId,
-                        principalTable: "Businesses",
+                        name: "FK_OrganizationUsers_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrganizationUsers_OrganizationUserRoles_OrganizationUserRoleId",
+                        column: x => x.OrganizationUserRoleId,
+                        principalTable: "OrganizationUserRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -238,13 +258,18 @@ namespace AdvanceCore.API.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BusinessUsers_BusinessId",
-                table: "BusinessUsers",
-                column: "BusinessId");
+                name: "IX_OrganizationUsers_OrganizationId",
+                table: "OrganizationUsers",
+                column: "OrganizationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BusinessUsers_UserId",
-                table: "BusinessUsers",
+                name: "IX_OrganizationUsers_OrganizationUserRoleId",
+                table: "OrganizationUsers",
+                column: "OrganizationUserRoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrganizationUsers_UserId",
+                table: "OrganizationUsers",
                 column: "UserId");
         }
 
@@ -266,7 +291,7 @@ namespace AdvanceCore.API.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BusinessUsers");
+                name: "OrganizationUsers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -275,7 +300,10 @@ namespace AdvanceCore.API.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Businesses");
+                name: "Organizations");
+
+            migrationBuilder.DropTable(
+                name: "OrganizationUserRoles");
         }
     }
 }

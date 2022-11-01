@@ -13,6 +13,11 @@ public class OrganizationUser
     public Organization Organization { get; set; } = null!;
 
     [Required]
+    public Guid OrganizationUserRoleId { get; set; }
+    [Required]
+    public OrganizationUserRole OrganizationUserRole { get; set; } = null!;
+
+    [Required]
     public string UserId { get; set; } = null!;
     [Required]
     public ApplicationUser User { get; set; } = null!;
