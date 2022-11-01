@@ -55,8 +55,8 @@ public static class ConfigureServices
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
         services.AddScoped<IIdentityUserRepository, IdentityUserRepository>();
-        services.AddScoped<IBusinessRepository, BusinessRepository>();
-        services.AddScoped<IBusinessUserRepository, BusinessUserRepository>();
+        services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+        services.AddScoped<IOrganizationUserRepository, OrganizationUserRepository>();
 
         return services;
     }

@@ -2,15 +2,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AdvanceCore.Domain.Entities;
 
-public class BusinessUser
+public class OrganizationUser
 {
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
-    public Guid BusinessId { get; set; }
+    public Guid OrganizationId { get; set; }
     [Required]
-    public Business Business { get; set; } = null!;
+    public Organization Organization { get; set; } = null!;
 
     [Required]
     public string UserId { get; set; } = null!;

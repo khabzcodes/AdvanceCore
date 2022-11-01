@@ -18,6 +18,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
         base.OnModelCreating(builder);
     }
 
-    public DbSet<Business> Businesses { get; set; } = null!;
-    public DbSet<BusinessUser> BusinessUsers { get; set; } = null!;
+    public DbSet<Organization> Organizations { get; set; } = null!;
+    public DbSet<OrganizationUser> OrganizationUsers { get; set; } = null!;
 }

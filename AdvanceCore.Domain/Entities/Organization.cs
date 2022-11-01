@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AdvanceCore.Domain.Entities;
 
-public class Business
+public class Organization
 {
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
@@ -10,7 +10,7 @@ public class Business
     [Required]
     public string Name { get; set; } = string.Empty;
 
-    public List<BusinessUser> BusinessUsers { get; set; } = null!;
+    public List<OrganizationUser> OrganizationsUsers { get; set; } = null!;
 
     [Required]
     public string CreatedBy { get; set; } = string.Empty;
