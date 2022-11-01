@@ -1,5 +1,6 @@
 using AdvanceCore.Application;
 using AdvanceCore.Infrastructure;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -21,12 +22,9 @@ if (app.Environment.IsDevelopment())
 {
 }
 
-// app.UseMiddleware<ExceptionHandlingMiddleware>();
-
+app.UseExceptionHandler("/error");
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();

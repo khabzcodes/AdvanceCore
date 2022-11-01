@@ -1,4 +1,4 @@
-using FluentResults;
+using ErrorOr;
 using MediatR;
 
 namespace AdvanceCore.Application.Authentication.Commands.Register;
@@ -10,4 +10,4 @@ public record RegisterCommand(
     string password,
     string companyName,
     string companyEmail
-) : IRequest<AuthenticationResult>;
+) : IRequest<ErrorOr<AuthenticationResult>>;

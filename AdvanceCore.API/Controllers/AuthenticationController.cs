@@ -1,14 +1,15 @@
 using AdvanceCore.Application.Authentication;
 using AdvanceCore.Application.Authentication.Commands.Register;
 using AdvanceCore.Contracts.Authentication;
+using ErrorOr;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdvanceCore.API.Controllers;
 
-[ApiController]
 [Route("api/auth")]
-public class AuthenticationController : ControllerBase
+public class AuthenticationController : ApiController
 {
     private readonly ISender _mediator;
     public AuthenticationController(ISender mediator)
@@ -19,21 +20,19 @@ public class AuthenticationController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest request, CancellationToken cancellationToken)
     {
-        RegisterCommand command = new RegisterCommand(
+        var command = new RegisterCommand(
             request.firstName,
             request.lastName,
             request.email,
             request.password,
             request.companyName,
-            request.companyEmail);
+            request.companyEmail
+            );
 
-        AuthenticationResult result = await _mediator.Send(command, cancellationToken);
+        ErrorOr<AuthenticationResult> authResult = await _mediator.Send(command, cancellationToken);
 
-        return Ok();
-    }
-
-    public static AuthenticationResult MapAuthenticationResult(AuthenticationResult response)
-    {
-        return new AuthenticationResult() { Token = response.Token };
+        return authResult.Match(
+            authResult => Ok(authResult),
+            errors => Problem(errors));
     }
 }

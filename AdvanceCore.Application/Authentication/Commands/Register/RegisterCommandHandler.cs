@@ -3,10 +3,11 @@ using FluentResults;
 using AdvanceCore.Application.Persistence;
 using AdvanceCore.Domain.Entities;
 using AdvanceCore.Application.Common.Interface.Authentication;
+using ErrorOr;
 
 namespace AdvanceCore.Application.Authentication.Commands.Register;
 
-public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthenticationResult>
+public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
 {
     private readonly IIdentityUserRepository _identityUserRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
@@ -22,13 +23,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
         _mediator = mediator;
     }
 
-    public async Task<AuthenticationResult> Handle(RegisterCommand command, CancellationToken cancellationToken)
+    public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
-        if (await _identityUserRepository.GetApplicationUserByEmailAsync(command.email) is not null)
-        {
-            // Return user already exist error message
-        }
-
         ApplicationUser user = new()
         {
             FirstName = command.firstName,
@@ -53,6 +49,6 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
             // Return server error
         }
 
-        return new AuthenticationResult() { Token = jwtToken };
+        return new ErrorOr<AuthenticationResult>();
     }
 }

@@ -3,20 +3,20 @@ using AdvanceCore.Domain.Entities;
 
 namespace AdvanceCore.Infrastructure.Persistence;
 
-public class BusinessRepository : IBusinessRepository
+public class OrganizationRepository : IOrganizationRepository
 {
     private readonly ApplicationDbContext _context;
 
-    public BusinessRepository(ApplicationDbContext context)
+    public OrganizationRepository(ApplicationDbContext context)
     {
         _context = context;
     }
 
-    public Business AddBusiness(Business business)
+    public Organization AddOrganization(Organization org)
     {
-        _context.Businesses.Add(business);
+        _context.Organizations.Add(org);
         _context.SaveChanges();
 
-        return business;
+        return org;
     }
 }
