@@ -1,5 +1,6 @@
 using AdvanceCore.Application;
 using AdvanceCore.Infrastructure;
+using AdvanceCore.Infrastructure.Persistence;
 using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,17 +17,29 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
 {
+    using (var scope = app.Services.CreateScope())
+    {
+        var initializer = scope.ServiceProvider.GetService<ApplicationDbContextInitializer>();
+        if (initializer is not null)
+        {
+            await initializer.InitializeAsync();
+            await initializer.SeedAsync();
+        }
+    }
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+    }
+
+    app.UseExceptionHandler("/error");
+    app.UseHttpsRedirection();
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    app.Run();
 }
 
-app.UseExceptionHandler("/error");
-app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
 
-app.MapControllers();
-
-app.Run();

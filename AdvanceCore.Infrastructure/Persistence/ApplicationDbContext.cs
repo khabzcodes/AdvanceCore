@@ -20,4 +20,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 
     public DbSet<Organization> Organizations { get; set; } = null!;
     public DbSet<OrganizationUser> OrganizationUsers { get; set; } = null!;
+    public DbSet<OrganizationUserRole> OrganizationUserRoles { get; set; } = null!;
 }

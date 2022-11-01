@@ -51,6 +51,7 @@ public static class ConfigureServices
             };
         });
 
+        services.AddScoped<ApplicationDbContextInitializer>();
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 

@@ -17,7 +17,7 @@ namespace AdvanceCore.API.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "6.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -98,7 +98,7 @@ namespace AdvanceCore.API.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("AdvanceCore.Domain.Entities.Business", b =>
+            modelBuilder.Entity("AdvanceCore.Domain.Entities.Organization", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -117,16 +117,13 @@ namespace AdvanceCore.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Businesses");
+                    b.ToTable("Organizations");
                 });
 
-            modelBuilder.Entity("AdvanceCore.Domain.Entities.BusinessUser", b =>
+            modelBuilder.Entity("AdvanceCore.Domain.Entities.OrganizationUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BusinessId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
@@ -136,17 +133,35 @@ namespace AdvanceCore.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BusinessId");
+                    b.HasIndex("OrganizationId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BusinessUsers");
+                    b.ToTable("OrganizationUsers");
+                });
+
+            modelBuilder.Entity("AdvanceCore.Domain.Entities.OrganizationUserRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrganizationUserRoles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -282,11 +297,11 @@ namespace AdvanceCore.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AdvanceCore.Domain.Entities.BusinessUser", b =>
+            modelBuilder.Entity("AdvanceCore.Domain.Entities.OrganizationUser", b =>
                 {
-                    b.HasOne("AdvanceCore.Domain.Entities.Business", "Business")
-                        .WithMany("BusinessUsers")
-                        .HasForeignKey("BusinessId")
+                    b.HasOne("AdvanceCore.Domain.Entities.Organization", "Organization")
+                        .WithMany("OrganizationsUsers")
+                        .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -296,7 +311,7 @@ namespace AdvanceCore.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Business");
+                    b.Navigation("Organization");
 
                     b.Navigation("User");
                 });
@@ -352,9 +367,9 @@ namespace AdvanceCore.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AdvanceCore.Domain.Entities.Business", b =>
+            modelBuilder.Entity("AdvanceCore.Domain.Entities.Organization", b =>
                 {
-                    b.Navigation("BusinessUsers");
+                    b.Navigation("OrganizationsUsers");
                 });
 #pragma warning restore 612, 618
         }
