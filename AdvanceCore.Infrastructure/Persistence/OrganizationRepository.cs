@@ -24,6 +24,15 @@ public class OrganizationRepository : IOrganizationRepository
 
     public List<Organization> GetByUserId(string userId)
     {
-        return _context.Organizations.Include(x => x.OrganizationUsers).Where(x => x.OrganizationUsers.Any(x => x.UserId == userId)).ToList();
+        return _context.Organizations
+            .Include(x => x.OrganizationUsers)
+            .Where(x => x.OrganizationUsers.Any(x => x.UserId == userId)).ToList();
+    }
+
+    public Organization? GetByUserIdAndOrganizationId(Guid organizationId, string userId)
+    {
+        return _context.Organizations
+            .Include(o => o.OrganizationUsers)
+            .FirstOrDefault(o => o.OrganizationUsers.Any(ou => ou.UserId == userId) && o.Id == organizationId);
     }
 }
