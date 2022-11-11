@@ -4,5 +4,5 @@ namespace AdvanceCore.Application.Persistence;
 
 public interface IOrganizationUserRepository
 {
-    OrganizationUser AddOrganizationUser(OrganizationUser orgUser);
+    OrganizationUser Add(OrganizationUser organizationUser);
 }

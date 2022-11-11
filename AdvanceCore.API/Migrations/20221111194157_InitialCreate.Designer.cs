@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvanceCore.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221101201358_InitialCreate")]
+    [Migration("20221111194157_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,7 +36,7 @@ namespace AdvanceCore.API.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -106,12 +106,12 @@ namespace AdvanceCore.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CreatedBy")
+                    b.Property<string>("CreatorId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -123,6 +123,8 @@ namespace AdvanceCore.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatorId");
+
                     b.ToTable("Organizations");
                 });
 
@@ -132,47 +134,33 @@ namespace AdvanceCore.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
+                    b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("OrganizationId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("OrganizationUserRoleId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("PrimaryContactNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecondaryContactNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OrganizationId");
 
-                    b.HasIndex("OrganizationUserRoleId");
-
-                    b.HasIndex("UserId");
-
                     b.ToTable("OrganizationUsers");
-                });
-
-            modelBuilder.Entity("AdvanceCore.Domain.Entities.OrganizationUserRole", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OrganizationUserRoles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -308,31 +296,26 @@ namespace AdvanceCore.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AdvanceCore.Domain.Entities.Organization", b =>
+                {
+                    b.HasOne("AdvanceCore.Domain.Entities.ApplicationUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+                });
+
             modelBuilder.Entity("AdvanceCore.Domain.Entities.OrganizationUser", b =>
                 {
                     b.HasOne("AdvanceCore.Domain.Entities.Organization", "Organization")
-                        .WithMany("OrganizationsUsers")
+                        .WithMany("OrganizationUsers")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AdvanceCore.Domain.Entities.OrganizationUserRole", "OrganizationUserRole")
-                        .WithMany()
-                        .HasForeignKey("OrganizationUserRoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AdvanceCore.Domain.Entities.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Organization");
-
-                    b.Navigation("OrganizationUserRole");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -388,7 +371,7 @@ namespace AdvanceCore.API.Migrations
 
             modelBuilder.Entity("AdvanceCore.Domain.Entities.Organization", b =>
                 {
-                    b.Navigation("OrganizationsUsers");
+                    b.Navigation("OrganizationUsers");
                 });
 #pragma warning restore 612, 618
         }

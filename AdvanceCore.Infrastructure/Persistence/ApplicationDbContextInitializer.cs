@@ -45,7 +45,6 @@ public class ApplicationDbContextInitializer
         try
         {
             await TrySeedUserRoles();
-            await TrySeedOrganizationUserRoles();
         }
         catch (Exception e)
         {
@@ -75,24 +74,24 @@ public class ApplicationDbContextInitializer
         }
     }
 
-    public async Task TrySeedOrganizationUserRoles()
-    {
-        try
-        {
-            if (_context.OrganizationUserRoles.All(x => x.Name != Constants.Administrator))
-            {
-                OrganizationUserRole organizationUserRole = new()
-                {
-                    Name = Constants.Administrator
-                };
-                _context.OrganizationUserRoles.Add(organizationUserRole);
-            }
-            await _context.SaveChangesAsync();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An error occurred while seeding organization user roles");
-            throw;
-        }
-    }
+    // public async Task TrySeedOrganizationUserRoles()
+    // {
+    //     try
+    //     {
+    //         if (_context.OrganizationUserRoles.All(x => x.Name != Constants.Administrator))
+    //         {
+    //             OrganizationUserRole organizationUserRole = new()
+    //             {
+    //                 Name = Constants.Administrator
+    //             };
+    //             _context.OrganizationUserRoles.Add(organizationUserRole);
+    //         }
+    //         await _context.SaveChangesAsync();
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         _logger.LogError(e, "An error occurred while seeding organization user roles");
+    //         throw;
+    //     }
+    // }
 }

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using AdvanceCore.Application;
 using AdvanceCore.Infrastructure;
 using AdvanceCore.Infrastructure.Persistence;
@@ -10,11 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
         .AddInfrastructureService(builder.Configuration)
         .AddApplication();
 
-    builder.Services.AddControllers();
+    builder.Services.AddControllers().AddJsonOptions(options =>
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
 }
-
 
 var app = builder.Build();
 {

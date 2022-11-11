@@ -11,65 +11,53 @@ namespace AdvanceCore.Application.Authentication.Commands.Register;
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthResponse>>
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IOrganizationRepository _organizationRepository;
     private readonly IOrganizationUserRepository _organizationUserRepository;
-    private readonly IOrganizationUserRoleRepository _organizationUserRoleRepository;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
     public RegisterCommandHandler(
         UserManager<ApplicationUser> userManager,
+        IJwtTokenGenerator jwtTokenGenerator,
         IOrganizationRepository organizationRepository,
-        IOrganizationUserRepository organizationUserRepository,
-        IOrganizationUserRoleRepository organizationUserRoleRepository,
-        IJwtTokenGenerator jwtTokenGenerator)
+        IOrganizationUserRepository organizationUserRepository)
     {
         _userManager = userManager;
+        _jwtTokenGenerator = jwtTokenGenerator;
         _organizationRepository = organizationRepository;
         _organizationUserRepository = organizationUserRepository;
-        _organizationUserRoleRepository = organizationUserRoleRepository;
-        _jwtTokenGenerator = jwtTokenGenerator;
     }
 
     public async Task<ErrorOr<AuthResponse>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
-        ApplicationUser user = new()
-        {
-            FirstName = command.firstName,
-            LastName = command.lastName,
-            UserName = command.email,
-            Email = command.email
-        };
-        // Insert user details to db
+        ApplicationUser user = ApplicationUser.Create(
+            command.firstName,
+            command.lastName,
+            command.email,
+            DateTime.UtcNow);
+
         var createUserResult = await _userManager.CreateAsync(user, command.password);
 
         await _userManager.AddToRoleAsync(user, Constants.UserRole);
-        // Generate jwt token
+
         var jwtToken = _jwtTokenGenerator.GenerateJwtToken(user.Id);
-        // Insert organization to db
-        Organization organization = new()
-        {
-            Name = command.companyName,
-            Email = command.companyEmail,
-            OrganizationsUsers = new List<OrganizationUser>(),
-            CreatedBy = user.Id,
-        };
 
-        var createOrganization = _organizationRepository.AddOrganization(organization);
+        Organization organization = Organization.Create(
+            Guid.NewGuid(),
+            command.companyName,
+            command.companyEmail,
+            user.Id,
+            DateTime.UtcNow);
 
-        OrganizationUserRole? adminRole = _organizationUserRoleRepository.GetOrganizationUserRoleByName(Constants.Administrator);
+        var createOrganization = _organizationRepository.Add(organization);
 
-        if (adminRole == null) return Error.Failure();
+        OrganizationUser organizationUser = OrganizationUser.Create(
+            organization.Id,
+            user.Id,
+            null,
+            null,
+            null);
 
-        // Insert organization user to db
-        OrganizationUser organizationUser = new()
-        {
-            OrganizationId = organization.Id,
-            UserId = user.Id,
-            OrganizationUserRoleId = Guid.Parse(adminRole.Id.ToString()),
-            CreatedBy = user.Id,
-        };
-
-        _organizationUserRepository.AddOrganizationUser(organizationUser);
+        _organizationUserRepository.Add(organizationUser);
 
         return new AuthResponse(Token: jwtToken);
     }

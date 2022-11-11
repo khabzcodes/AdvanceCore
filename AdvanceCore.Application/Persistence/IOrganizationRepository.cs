@@ -4,5 +4,7 @@ namespace AdvanceCore.Application.Persistence;
 
 public interface IOrganizationRepository
 {
-    Organization AddOrganization(Organization org);
+    Organization Add(Organization org);
+    List<Organization> GetByUserId(string userId);
+    Organization? GetByUserIdAndOrganizationId(Guid organizationId, string userId);
 }
