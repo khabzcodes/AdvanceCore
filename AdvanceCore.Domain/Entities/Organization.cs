@@ -1,11 +1,27 @@
+using System.Data;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AdvanceCore.Domain.Entities;
 
 public class Organization
 {
+    public Organization(
+        Guid id,
+        string name,
+        string email,
+        string creatorId,
+        DateTime createdAtUtc)
+    {
+        Id = id;
+        Name = name;
+        Email = email;
+        CreatorId = creatorId;
+        CreatedAtUtc = createdAtUtc;
+    }
+
     [Key]
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; }
 
     [Required]
     public string Name { get; set; } = string.Empty;
@@ -13,10 +29,29 @@ public class Organization
     [Required]
     public string Email { get; set; } = string.Empty;
 
-    public List<OrganizationUser> OrganizationsUsers { get; set; } = null!;
-
     [Required]
-    public string CreatedBy { get; set; } = string.Empty;
+    public string CreatorId { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public virtual ApplicationUser Creator { get; set; } = null!;
+
+    public virtual ICollection<OrganizationUser> OrganizationUsers { get; set; } = new List<OrganizationUser>();
+
+    public DateTime CreatedAtUtc { get; set; }
+
+    public static Organization Create(
+        Guid id,
+        string name,
+        string email,
+        string creatorId,
+        DateTime createdAtUtc)
+    {
+        Organization organization = new Organization(
+            Guid.NewGuid(),
+            name,
+            email,
+            creatorId,
+            createdAtUtc);
+
+        return organization;
+    }
 }

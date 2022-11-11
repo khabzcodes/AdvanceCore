@@ -12,11 +12,11 @@ public class OrganizationUserRepository : IOrganizationUserRepository
         _context = context;
     }
 
-    public OrganizationUser AddOrganizationUser(OrganizationUser orgUser)
+    public OrganizationUser Add(OrganizationUser organizationUser)
     {
-        _context.OrganizationUsers.Add(orgUser);
+        _context.OrganizationUsers.Add(organizationUser);
         _context.SaveChanges();
 
-        return orgUser;
+        return organizationUser;
     }
 }
