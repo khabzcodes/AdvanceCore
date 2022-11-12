@@ -53,7 +53,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
         OrganizationUser organizationUser = OrganizationUser.Create(
             organization.Id,
             user.Id,
-            null,
+            user.Email,
+            Constants.OrganizationAdministrator,
             null,
             null);
 

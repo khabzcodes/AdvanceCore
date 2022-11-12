@@ -8,13 +8,15 @@ public class OrganizationUser
     public OrganizationUser(
         Guid organizationId,
         string userId,
-        string? email,
+        string email,
+        string role,
         string? primaryContactNumber,
         string? secondaryContactNumber)
     {
         OrganizationId = organizationId;
         UserId = userId;
         Email = email;
+        Role = role;
         PrimaryContactNumber = primaryContactNumber;
         SecondaryContactNumber = secondaryContactNumber;
     }
@@ -33,6 +35,8 @@ public class OrganizationUser
 
     public string? SecondaryContactNumber { get; set; }
 
+    public string Role { get; set; }
+
     public bool IsActive { get; set; } = false;
 
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
@@ -40,7 +44,8 @@ public class OrganizationUser
     public static OrganizationUser Create(
         Guid organizationId,
         string userId,
-        string? email,
+        string email,
+        string role,
         string? primaryContactNumber,
         string? secondaryContactNumber)
     {
@@ -48,6 +53,7 @@ public class OrganizationUser
             organizationId,
             userId,
             email,
+            role,
             primaryContactNumber,
             secondaryContactNumber);
 
