@@ -35,4 +35,10 @@ public class OrganizationUserRepository : IOrganizationUserRepository
     {
         return _context.OrganizationUsers.FirstOrDefault(x => x.OrganizationId == organizationId && x.Email == email);
     }
+
+    public void Update(OrganizationUser organizationUser)
+    {
+        _context.OrganizationUsers.Update(organizationUser);
+        _context.SaveChanges();
+    }
 }

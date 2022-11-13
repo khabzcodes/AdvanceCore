@@ -51,12 +51,15 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
         var createOrganization = _organizationRepository.Add(organization);
 
         OrganizationUser organizationUser = OrganizationUser.Create(
+            Guid.NewGuid(),
             organization.Id,
             user.Id,
             user.Email,
             Constants.OrganizationAdministrator,
             null,
-            null);
+            null,
+            true,
+            DateTime.UtcNow);
 
         _organizationUserRepository.Add(organizationUser);
 
