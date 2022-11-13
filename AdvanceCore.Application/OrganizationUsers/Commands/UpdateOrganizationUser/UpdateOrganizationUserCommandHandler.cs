@@ -1,7 +1,6 @@
 using AdvanceCore.Application.Common.Errors;
 using AdvanceCore.Application.OrganizationUsers.Common;
 using AdvanceCore.Application.Persistence;
-using AdvanceCore.Domain.Entities;
 using ErrorOr;
 using MediatR;
 

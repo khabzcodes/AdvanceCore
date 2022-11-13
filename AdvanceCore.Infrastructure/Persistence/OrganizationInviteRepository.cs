@@ -21,6 +21,11 @@ public class OrganizationInviteRepository : IOrganizationInviteRepository
         return organizationInvite;
     }
 
+    public OrganizationInvite? GetById(Guid organizationInviteId)
+    {
+        return _context.OrganizationInvites.FirstOrDefault(x => x.Id == organizationInviteId);
+    }
+
     public List<OrganizationInvite> GetByOrganizationId(Guid organizationId)
     {
         return _context.OrganizationInvites.Include(x => x.Organization)
@@ -33,5 +38,11 @@ public class OrganizationInviteRepository : IOrganizationInviteRepository
         return _context.OrganizationInvites
             .Include(x => x.Organization)
             .FirstOrDefault(x => x.OrganizationId == organizationId && x.Email == email);
+    }
+
+    public void Remove(OrganizationInvite organizationInvite)
+    {
+        _context.OrganizationInvites.Remove(organizationInvite);
+        _context.SaveChanges();
     }
 }
