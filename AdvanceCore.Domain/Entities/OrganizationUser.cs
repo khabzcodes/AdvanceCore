@@ -6,50 +6,67 @@ namespace AdvanceCore.Domain.Entities;
 public class OrganizationUser
 {
     public OrganizationUser(
+        Guid id,
         Guid organizationId,
         string userId,
-        string? email,
+        string email,
+        string role,
         string? primaryContactNumber,
-        string? secondaryContactNumber)
+        string? secondaryContactNumber,
+        bool isActive,
+        DateTime createdAtUtc)
     {
+        Id = id;
         OrganizationId = organizationId;
         UserId = userId;
         Email = email;
+        Role = role;
         PrimaryContactNumber = primaryContactNumber;
         SecondaryContactNumber = secondaryContactNumber;
+        IsActive = isActive;
+        CreatedAtUtc = createdAtUtc;
     }
 
     [Key]
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; }
 
     public Guid OrganizationId { get; set; }
-    public virtual Organization Organization { get; set; } = null!;
 
     public string UserId { get; set; }
 
-    public string? Email { get; set; }
+    public string Email { get; set; }
 
     public string? PrimaryContactNumber { get; set; }
 
     public string? SecondaryContactNumber { get; set; }
 
+    public string Role { get; set; }
+
     public bool IsActive { get; set; } = false;
 
-    public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAtUtc { get; set; }
 
     public static OrganizationUser Create(
+        Guid id,
         Guid organizationId,
         string userId,
-        string? email,
+        string email,
+        string role,
         string? primaryContactNumber,
-        string? secondaryContactNumber)
+        string? secondaryContactNumber,
+        bool isActive,
+        DateTime createdAtUtc)
     {
         OrganizationUser organizationUser = new OrganizationUser(
+            id,
             organizationId,
             userId,
             email,
+            role,
             primaryContactNumber,
-            secondaryContactNumber);
+            secondaryContactNumber,
+            isActive,
+            createdAtUtc);
 
         return organizationUser;
     }

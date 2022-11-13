@@ -126,6 +126,37 @@ namespace AdvanceCore.API.Migrations
                     b.ToTable("Organizations");
                 });
 
+            modelBuilder.Entity("AdvanceCore.Domain.Entities.OrganizationInvite", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("OrganizationInvites");
+                });
+
             modelBuilder.Entity("AdvanceCore.Domain.Entities.OrganizationUser", b =>
                 {
                     b.Property<Guid>("Id")
@@ -147,6 +178,10 @@ namespace AdvanceCore.API.Migrations
                     b.Property<string>("PrimaryContactNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecondaryContactNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -159,6 +194,23 @@ namespace AdvanceCore.API.Migrations
                     b.HasIndex("OrganizationId");
 
                     b.ToTable("OrganizationUsers");
+                });
+
+            modelBuilder.Entity("AdvanceCore.Domain.Entities.OrganizationUserRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrganizationUserRoles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -303,6 +355,17 @@ namespace AdvanceCore.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Creator");
+                });
+
+            modelBuilder.Entity("AdvanceCore.Domain.Entities.OrganizationInvite", b =>
+                {
+                    b.HasOne("AdvanceCore.Domain.Entities.Organization", "Organization")
+                        .WithMany()
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("AdvanceCore.Domain.Entities.OrganizationUser", b =>

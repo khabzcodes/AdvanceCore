@@ -33,6 +33,7 @@ public class OrganizationRepository : IOrganizationRepository
     {
         return _context.Organizations
             .Include(o => o.OrganizationUsers)
-            .FirstOrDefault(o => o.OrganizationUsers.Any(ou => ou.UserId == userId) && o.Id == organizationId);
+            .FirstOrDefault(o => o.Id == organizationId && o.OrganizationUsers
+            .FirstOrDefault(ou => ou.OrganizationId == organizationId && ou.UserId == userId) != null);
     }
 }

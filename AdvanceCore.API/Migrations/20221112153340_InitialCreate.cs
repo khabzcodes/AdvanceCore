@@ -52,6 +52,19 @@ namespace AdvanceCore.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OrganizationUserRoles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrganizationUserRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -179,6 +192,28 @@ namespace AdvanceCore.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OrganizationInvites",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OrganizationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedById = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrganizationInvites", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrganizationInvites_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrganizationUsers",
                 columns: table => new
                 {
@@ -188,6 +223,7 @@ namespace AdvanceCore.API.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PrimaryContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SecondaryContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -242,6 +278,11 @@ namespace AdvanceCore.API.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrganizationInvites_OrganizationId",
+                table: "OrganizationInvites",
+                column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Organizations_CreatorId",
                 table: "Organizations",
                 column: "CreatorId");
@@ -268,6 +309,12 @@ namespace AdvanceCore.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "OrganizationInvites");
+
+            migrationBuilder.DropTable(
+                name: "OrganizationUserRoles");
 
             migrationBuilder.DropTable(
                 name: "OrganizationUsers");
