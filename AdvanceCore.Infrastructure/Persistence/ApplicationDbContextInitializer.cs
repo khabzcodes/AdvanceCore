@@ -45,6 +45,7 @@ public class ApplicationDbContextInitializer
         try
         {
             await TrySeedUserRoles();
+            await TrySeedOrganizationUserRoles();
         }
         catch (Exception e)
         {

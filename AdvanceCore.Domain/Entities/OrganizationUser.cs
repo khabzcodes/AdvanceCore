@@ -25,7 +25,6 @@ public class OrganizationUser
     public Guid Id { get; set; } = Guid.NewGuid();
 
     public Guid OrganizationId { get; set; }
-    public virtual Organization Organization { get; set; } = null!;
 
     public string UserId { get; set; }
 

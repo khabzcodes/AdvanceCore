@@ -13,7 +13,6 @@ namespace AdvanceCore.API.Controllers;
 [Route("/api/organizations")]
 public class OrganizationsController : ApiController
 {
-
     private readonly ISender _mediator;
 
     public OrganizationsController(ISender mediator)
@@ -23,6 +22,7 @@ public class OrganizationsController : ApiController
 
     /// <summary>
     /// Get user organizations
+    /// GET: api/organizations
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns>An array of Organization object</returns>
@@ -30,7 +30,7 @@ public class OrganizationsController : ApiController
     [ProducesResponseType(typeof(OrganizationsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Get(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetOrganizations(CancellationToken cancellationToken)
     {
         var user = User.FindFirst(ClaimTypes.NameIdentifier);
         if (user == null) return Unauthorized();
@@ -46,10 +46,11 @@ public class OrganizationsController : ApiController
 
     /// <summary>
     /// Get organization by organization id
+    /// GET: api/organizations/{organizationId}
     /// </summary>
     /// <param name="organizationId"></param>
     /// <returns></returns>
-    [HttpGet("{organizationId}")]
+    [HttpGet("{organizationId:guid}")]
     public async Task<IActionResult> Organization(Guid organizationId, CancellationToken cancellationToken)
     {
         var user = User.FindFirst(ClaimTypes.NameIdentifier);

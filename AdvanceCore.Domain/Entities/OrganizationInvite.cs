@@ -2,23 +2,37 @@ namespace AdvanceCore.Domain.Entities;
 
 public class OrganizationInvite
 {
-    public OrganizationInvite(string email, Guid organizationId)
+    public OrganizationInvite(
+        Guid organizationId,
+        string email,
+        string role,
+        string createdById)
     {
-        Email = email;
         OrganizationId = organizationId;
+        Email = email;
+        Role = role;
+        CreatedById = createdById;
     }
 
     public Guid Id { get; set; } = Guid.NewGuid();
-    public string Email { get; set; } = null!;
+    public string Email { get; set; }
+    public string Role { get; set; }
     public Guid OrganizationId { get; set; }
     public Organization Organization { get; set; } = null!;
+    public string CreatedById { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public static OrganizationInvite Create(string email, Guid organizationId)
+    public static OrganizationInvite Create(
+        Guid organizationId,
+        string email,
+        string role,
+        string createdById)
     {
         OrganizationInvite organizationInvite = new OrganizationInvite(
+            organizationId,
             email,
-            organizationId
+            role,
+            createdById
         );
 
         return organizationInvite;

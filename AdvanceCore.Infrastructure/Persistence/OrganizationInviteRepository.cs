@@ -1,5 +1,6 @@
 using AdvanceCore.Application.Persistence;
 using AdvanceCore.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdvanceCore.Infrastructure.Persistence;
 
@@ -18,5 +19,19 @@ public class OrganizationInviteRepository : IOrganizationInviteRepository
         _context.SaveChanges();
 
         return organizationInvite;
+    }
+
+    public List<OrganizationInvite> GetByOrganizationId(Guid organizationId)
+    {
+        return _context.OrganizationInvites.Include(x => x.Organization)
+            .ThenInclude(x => x.OrganizationUsers)
+            .Where(oi => oi.OrganizationId == organizationId).ToList();
+    }
+
+    public OrganizationInvite? GetByOrganizationIdAndEmail(Guid organizationId, string email)
+    {
+        return _context.OrganizationInvites
+            .Include(x => x.Organization)
+            .FirstOrDefault(x => x.OrganizationId == organizationId && x.Email == email);
     }
 }
