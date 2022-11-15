@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 using AdvanceCore.Application;
 using AdvanceCore.Infrastructure;
 using AdvanceCore.Infrastructure.Persistence;
-using MediatR;
+
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -10,6 +10,20 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services
         .AddInfrastructureService(builder.Configuration)
         .AddApplication();
+
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: "mySpecificOrigins",
+            builder =>
+            {
+                builder.WithOrigins("https://localhost:5000")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+            });
+    });
+
+
 
     builder.Services.AddControllers().AddJsonOptions(options =>
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
@@ -33,7 +47,7 @@ var app = builder.Build();
     if (app.Environment.IsDevelopment())
     {
     }
-
+    app.UseCors("mySpecificOrigins");
     app.UseExceptionHandler("/error");
     app.UseHttpsRedirection();
     app.UseAuthentication();
