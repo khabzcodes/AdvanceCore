@@ -6,6 +6,7 @@ using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using AdvanceCore.Application.Clients.Queries.GetOrganizationClients;
 
 namespace AdvanceCore.API.Controllers
 {
@@ -41,6 +42,22 @@ namespace AdvanceCore.API.Controllers
                 result => Ok(result), 
                 error => Problem(error)
                 );
+        }
+
+
+        [HttpGet("get")]
+        [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Get([FromQuery] Guid organizationId, CancellationToken cancellationToken)
+        {
+            GetOrganizationClientsQuery query = new GetOrganizationClientsQuery(organizationId);
+
+            ErrorOr<ClientsResponse> result = await _mediator.Send(query, cancellationToken);
+
+            return result.Match(
+                result => Ok(result), 
+                error => Problem(error));
         }
     }
 }

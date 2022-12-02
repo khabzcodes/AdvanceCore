@@ -22,4 +22,9 @@ public class ClientsRepository : IClientsRepository
         _context.Clients.Add(client);
         _context.SaveChanges();
     }
+
+    public List<Client> GetAllByOrganizationId(Guid OrganizationId)
+    {
+        return _context.Clients.Where(c => c.OrganizationId == OrganizationId).ToList();
+    }
 }

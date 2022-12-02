@@ -9,4 +9,5 @@ namespace AdvanceCore.Application.Persistence;
 public interface IClientsRepository
 {
     void Add(Client client);
+    List<Client> GetAllByOrganizationId(Guid OrganizationId);
 }
