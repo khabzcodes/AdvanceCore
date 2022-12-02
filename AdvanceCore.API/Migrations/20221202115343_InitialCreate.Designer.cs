@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvanceCore.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221112153340_InitialCreate")]
+    [Migration("20221202115343_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -100,6 +100,30 @@ namespace AdvanceCore.API.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("AdvanceCore.Domain.Entities.Client", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Clients");
+                });
+
             modelBuilder.Entity("AdvanceCore.Domain.Entities.Organization", b =>
                 {
                     b.Property<Guid>("Id")
@@ -169,6 +193,7 @@ namespace AdvanceCore.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
@@ -372,13 +397,11 @@ namespace AdvanceCore.API.Migrations
 
             modelBuilder.Entity("AdvanceCore.Domain.Entities.OrganizationUser", b =>
                 {
-                    b.HasOne("AdvanceCore.Domain.Entities.Organization", "Organization")
+                    b.HasOne("AdvanceCore.Domain.Entities.Organization", null)
                         .WithMany("OrganizationUsers")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

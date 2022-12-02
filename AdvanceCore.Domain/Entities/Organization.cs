@@ -46,7 +46,7 @@ public class Organization
         DateTime createdAtUtc)
     {
         Organization organization = new Organization(
-            Guid.NewGuid(),
+            id,
             name,
             email,
             creatorId,

@@ -59,6 +59,7 @@ public static class ConfigureServices
         services.AddScoped<IOrganizationUserRepository, OrganizationUserRepository>();
         services.AddScoped<IOrganizationInviteRepository, OrganizationInviteRepository>();
         services.AddScoped<IOrganizationUserRoleRepository, OrganizationUserRoleRepository>();
+        services.AddScoped<IClientsRepository, ClientsRepository>();
 
         return services;
     }
