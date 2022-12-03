@@ -23,6 +23,11 @@ public class DepartmentsRepository : IDepartmentsRepository
         _context.SaveChanges();
     }
 
+    public List<Department> GetAllByOrganizationId(Guid organizationId)
+    {
+        return _context.Departments.Where(x => x.OrganizationId == organizationId).ToList();
+    }
+
     public Department? GetById(Guid id)
     {
         Department? department = _context.Departments.FirstOrDefault(x => x.Id == id);
