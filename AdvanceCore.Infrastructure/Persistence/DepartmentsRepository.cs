@@ -22,4 +22,17 @@ public class DepartmentsRepository : IDepartmentsRepository
         _context.Departments.Add(department);
         _context.SaveChanges();
     }
+
+    public Department? GetById(Guid id)
+    {
+        Department? department = _context.Departments.FirstOrDefault(x => x.Id == id);
+
+        return department;
+    }
+
+    public void Update(Department department)
+    {
+        _context.Update(department);
+        _context.SaveChanges();
+    }
 }

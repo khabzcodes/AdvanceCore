@@ -1,4 +1,5 @@
 ﻿using AdvanceCore.Application.Departments.Commands.CreateDepartment;
+using AdvanceCore.Application.Departments.Commands.UpdateDepartment;
 using AdvanceCore.Application.Departments.Common;
 using AdvanceCore.Contracts.Departments;
 using ErrorOr;
@@ -25,6 +26,21 @@ namespace AdvanceCore.API.Controllers
 
             return result.Match(
                 result => Ok(result), 
+                error => Problem(error));
+        }
+
+        [HttpPut("update")]
+        public async Task<IActionResult> Update(
+            [FromQuery] Guid departmentId, 
+            UpdateDepartmentRequest request, 
+            CancellationToken cancellationToken)
+        {
+            UpdateDepartmentCommand command = new(departmentId, request.OrganizationId, request.Name, request.Description);
+
+            ErrorOr<DepartmentResponse> result = await _mediator.Send(command, cancellationToken);
+
+            return result.Match(
+                result => Ok(result),
                 error => Problem(error));
         }
     }
