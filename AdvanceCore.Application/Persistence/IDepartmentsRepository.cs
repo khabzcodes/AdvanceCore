@@ -8,4 +8,5 @@ public interface IDepartmentsRepository
     void Update(Department department);
     Department? GetById(Guid id);
     List<Department> GetAllByOrganizationId(Guid organizationId);
+    Department? GetByIdAndOrganizationId(Guid departmentId, Guid organizationId);
 }

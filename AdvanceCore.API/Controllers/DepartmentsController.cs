@@ -1,6 +1,7 @@
 ﻿using AdvanceCore.Application.Departments.Commands.CreateDepartment;
 using AdvanceCore.Application.Departments.Commands.UpdateDepartment;
 using AdvanceCore.Application.Departments.Common;
+using AdvanceCore.Application.Departments.Queries.GetDepartment;
 using AdvanceCore.Application.Departments.Queries.GetDepartments;
 using AdvanceCore.Contracts.Departments;
 using ErrorOr;
@@ -34,6 +35,21 @@ namespace AdvanceCore.API.Controllers
             GetDepartmentsQuery query = new(organizationId);
 
             ErrorOr<DepartmentsResponse> result = await _mediator.Send(query, cancellationToken);
+
+            return result.Match(
+                result => Ok(result), 
+                error => Problem(error));
+        }
+
+        [HttpGet("getDepartment")]
+        public async Task<IActionResult> Get(
+            [FromQuery] Guid departmentId, 
+            [FromQuery] Guid organizationId, 
+            CancellationToken cancellationToken)
+        {
+            GetDepartmentQuery query = new(departmentId, organizationId);
+
+            ErrorOr<DepartmentResponse> result = await _mediator.Send(query, cancellationToken);
 
             return result.Match(
                 result => Ok(result), 

@@ -35,6 +35,11 @@ public class DepartmentsRepository : IDepartmentsRepository
         return department;
     }
 
+    public Department? GetByIdAndOrganizationId(Guid departmentId, Guid organizationId)
+    {
+        return _context.Departments.FirstOrDefault(d => d.Id == departmentId && d.OrganizationId == organizationId);
+    }
+
     public void Update(Department department)
     {
         _context.Update(department);
