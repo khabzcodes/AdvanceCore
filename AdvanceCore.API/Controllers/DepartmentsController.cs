@@ -41,6 +41,13 @@ namespace AdvanceCore.API.Controllers
                 error => Problem(error));
         }
 
+        /// <summary>
+        /// Get Organization department
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <param name="organizationId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpGet("getDepartment")]
         public async Task<IActionResult> Get(
             [FromQuery] Guid departmentId, 
