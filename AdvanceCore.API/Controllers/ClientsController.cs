@@ -1,12 +1,13 @@
 ﻿using AdvanceCore.Application.Clients.Commands.CreateClient;
 using AdvanceCore.Application.Clients.Common;
+using AdvanceCore.Application.Clients.Queries.GetOrganizationClient;
+using AdvanceCore.Application.Clients.Queries.GetOrganizationClients;
 using AdvanceCore.Contracts.Clients;
-using MediatR;
 using ErrorOr;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using AdvanceCore.Application.Clients.Queries.GetOrganizationClients;
 
 namespace AdvanceCore.API.Controllers
 {
@@ -21,6 +22,12 @@ namespace AdvanceCore.API.Controllers
             _mediator = mediator;
         }
 
+        /// <summary>
+        /// Add organization client
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPost("create")]
         [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -44,8 +51,14 @@ namespace AdvanceCore.API.Controllers
                 );
         }
 
+        /// <summary>
+        /// Get organization clients by organization id
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
 
-        [HttpGet("get")]
+        [HttpGet("getClients")]
         [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -57,6 +70,21 @@ namespace AdvanceCore.API.Controllers
 
             return result.Match(
                 result => Ok(result), 
+                error => Problem(error));
+        }
+
+        [HttpGet("getClient")]
+        public async Task<IActionResult> Get(
+            [FromQuery] Guid clientId,
+            [FromQuery] Guid organizationId,
+            CancellationToken cancellationToken)
+        {
+            GetOrganizationClientQuery query = new(clientId, organizationId);
+
+            ErrorOr<ClientResponse> result = await _mediator.Send(query, cancellationToken);
+
+            return result.Match(
+                result => Ok(result),
                 error => Problem(error));
         }
     }

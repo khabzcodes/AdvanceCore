@@ -27,4 +27,9 @@ public class ClientsRepository : IClientsRepository
     {
         return _context.Clients.Where(c => c.OrganizationId == OrganizationId).ToList();
     }
+
+    public Client? GetByIdAndOrganizationId(Guid id, Guid organizationId)
+    {
+        return _context.Clients.FirstOrDefault(x => x.Id == id && x.OrganizationId == organizationId);
+    }
 }

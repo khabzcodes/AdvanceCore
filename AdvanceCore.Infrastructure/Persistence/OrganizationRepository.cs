@@ -22,6 +22,11 @@ public class OrganizationRepository : IOrganizationRepository
         return org;
     }
 
+    public Organization? GetById(Guid id)
+    {
+        return _context.Organizations.FirstOrDefault(x => x.Id == id);
+    }
+
     public List<Organization> GetByUserId(string userId)
     {
         return _context.Organizations
