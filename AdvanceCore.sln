@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvanceCore.Domain", "Advan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvanceCore.Infrastructure", "AdvanceCore.Infrastructure\AdvanceCore.Infrastructure.csproj", "{7D515255-9A48-40F1-ADEE-EFDF22CF769A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvanceCore.UI", "AdvanceCore.UI\AdvanceCore.UI.csproj", "{E7C22054-AD77-48D3-8AC4-1DF2A570F64B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,12 @@ Global
 		{7D515255-9A48-40F1-ADEE-EFDF22CF769A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D515255-9A48-40F1-ADEE-EFDF22CF769A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D515255-9A48-40F1-ADEE-EFDF22CF769A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7C22054-AD77-48D3-8AC4-1DF2A570F64B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7C22054-AD77-48D3-8AC4-1DF2A570F64B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7C22054-AD77-48D3-8AC4-1DF2A570F64B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E7C22054-AD77-48D3-8AC4-1DF2A570F64B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7C22054-AD77-48D3-8AC4-1DF2A570F64B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7C22054-AD77-48D3-8AC4-1DF2A570F64B}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
