@@ -9,16 +9,13 @@ namespace AdvanceCore.UI
         {
             var builder = MauiApp.CreateBuilder();
             builder
-                .UseMauiApp<App>()
-                .ConfigureFonts(fonts =>
-                {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                });
+                .UseMauiApp<App>();
 
             builder.Services.AddMauiBlazorWebView();
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();
 #endif
+            builder.Services.AddAntDesign();
 
             builder.Services.AddSingleton<WeatherForecastService>();
 

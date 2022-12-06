@@ -1,0 +1,32 @@
+﻿@inherits LayoutComponentBase
+
+<Layout Style="min-height: 100vh;">
+    <SideNavigation />
+    <Layout Class="site-layout">
+        <Header Class="site-layout-background" Style="padding: 0; margin-bottom: 16px"></Header>
+        <Content Style="margin:0 16px;">
+            <div class="site-layout-background" style="padding: 24px; min-height: 360px">
+                @Body
+            </div>
+        </Content>
+        <Footer Style="text-align:center ">Kashings ©@DateTime.Now.Year</Footer>
+    </Layout>
+</Layout>
+
+
+@code {
+    
+}
+
+
+<style>
+    .logo {
+        height: 32px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 16px;
+    }
+
+    .site-layout .site-layout-background {
+        background: #fff;
+    }
+</style>

@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvanceCore.Domain", "Advan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvanceCore.Infrastructure", "AdvanceCore.Infrastructure\AdvanceCore.Infrastructure.csproj", "{7D515255-9A48-40F1-ADEE-EFDF22CF769A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvanceCore.UI", "AdvanceCore.UI\AdvanceCore.UI.csproj", "{E7C22054-AD77-48D3-8AC4-1DF2A570F64B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvanceCore.UI", "AdvanceCore.UI\AdvanceCore.UI.csproj", "{E7C22054-AD77-48D3-8AC4-1DF2A570F64B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
