@@ -1,0 +1,83 @@
+﻿@page "/login"
+@inject IAuthService _authService
+@inject NotificationService _notice
+@inject NavigationManager _navigation
+
+<PageTitle>Login :: Kashings</PageTitle>
+
+<AuthorizeView>
+    <NotAuthorized>
+        <div class="auth_container">
+            <Title Level="2">Welcome Back</Title>
+            <Form Loading="IsLoading"
+                  Context="form_context"
+                  Model="model"
+                  Class="auth_form"
+                  OnFinish="OnFinish"
+                  OnFinishFailed="OnFinishFailed">
+
+                <FormItem>
+                    <label>Email address</label>
+                    <Input size="@InputSize.Large" @bind-Value="@form_context.Email" placeholder="johndoe@kashings.com" />
+                </FormItem>
+
+                <FormItem>
+                    <label>Password</label>
+                    <InputPassword size="@InputSize.Large" @bind-Value="@form_context.Password" placeholder="Create a strong pwd" />
+                </FormItem>
+
+                <FormItem>
+                    <Button HtmlType="submit"
+                            Type="@ButtonType.Primary"
+                            Size="@ButtonSize.Large"
+                            Block>
+                        Login to your account
+                    </Button>
+                </FormItem>
+            </Form>
+        </div>
+    </NotAuthorized>
+    <Authorized>
+        @{
+            _navigation.NavigateTo("/", true);
+        }
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+    bool IsLoading;
+
+    private LoginViewModel model = new LoginViewModel();
+
+    private async Task OpenWithPlacement(NotificationPlacement placement, NotificationType notificationType, string? message)
+    {
+        await _notice.Open(new NotificationConfig()
+            {
+                Message = notificationType.ToString(),
+                Description = message,
+                Placement = placement
+            });
+    }
+
+    private async void OnFinish(EditContext editContext)
+    {
+        FluentResults.Result<AuthResponse> response = await _authService.Login(model);
+
+        if (!response.IsSuccess)
+        {
+            string? errorMessage = response.Errors.FirstOrDefault()?.Message;
+
+            await OpenWithPlacement(NotificationPlacement.BottomRight, NotificationType.Error, errorMessage);
+        }
+        else
+        {
+            _navigation.NavigateTo("/", true);
+        }
+    }
+
+    private void OnFinishFailed()
+    {
+
+    }
+}

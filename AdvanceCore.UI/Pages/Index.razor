@@ -1,4 +1,14 @@
 ﻿@page "/"
-@layout DashboardLayout
+@inject NavigationManager Navigation
 
-<h1>Home Page</h1>
+<PageTitle>Kashings :: Welcome</PageTitle>
+<AuthorizeView>
+    <Authorized>
+       <h1>Authenticate</h1>
+    </Authorized>
+    <NotAuthorized>
+        @{
+            Navigation.NavigateTo("/login");
+        }
+    </NotAuthorized>
+</AuthorizeView>

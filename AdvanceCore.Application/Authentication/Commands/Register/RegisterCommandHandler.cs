@@ -35,7 +35,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
             command.email,
             DateTime.UtcNow);
 
-        var createUserResult = await _userManager.CreateAsync(user, command.password);
+        await _userManager.CreateAsync(user, command.password);
 
         await _userManager.AddToRoleAsync(user, Constants.UserRole);
 
@@ -48,7 +48,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
             user.Id,
             DateTime.UtcNow);
 
-        var createOrganization = _organizationRepository.Add(organization);
+        _organizationRepository.Add(organization);
 
         OrganizationUser organizationUser = OrganizationUser.Create(
             Guid.NewGuid(),
