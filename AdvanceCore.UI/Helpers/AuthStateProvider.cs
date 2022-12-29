@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 
 namespace AdvanceCore.UI.Helpers;
@@ -8,24 +9,35 @@ public class AuthStateProvider : AuthenticationStateProvider
     private readonly HttpClient _httpClient;
     private readonly ILocalStorageService _localStorage;
     private readonly AuthenticationState _anonymous;
+    private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
 
     public AuthStateProvider(
-        HttpClient httpClient, 
-        ILocalStorageService localStorage
-        )
+        HttpClient httpClient,
+        ILocalStorageService localStorage,
+        JwtSecurityTokenHandler jwtSecurityTokenHandler)
     {
         _httpClient = httpClient;
         _localStorage = localStorage;
         _anonymous = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+        _jwtSecurityTokenHandler = jwtSecurityTokenHandler;
     }
 
     public async override Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        var token = await _localStorage.GetItemAsync<string>("authToken");
-        if (string.IsNullOrWhiteSpace(token)) return _anonymous;
+        var savedToken = await _localStorage.GetItemAsync<string>("authToken");
+        if (string.IsNullOrWhiteSpace(savedToken)) return _anonymous;
+                                                                                                          
+        JwtSecurityToken jwtSecurityToken = _jwtSecurityTokenHandler.ReadJwtToken(savedToken);
+        DateTime expiryDate = jwtSecurityToken.ValidTo;
 
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
-        return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(JwtParser.ParseClaimsFromJwt(token), "jwtAuthType")));
+        if (expiryDate < DateTime.UtcNow)
+        {
+            await _localStorage.RemoveItemAsync("authToken");
+            return _anonymous;
+        }
+
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", savedToken);
+        return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(JwtParser.ParseClaimsFromJwt(savedToken), "jwtAuthType")));
     }
 
     public void NotifyUserAuthentication(string email)

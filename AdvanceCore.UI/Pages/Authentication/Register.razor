@@ -1,59 +1,69 @@
 ﻿@page "/register"
-@layout AuthenticationLayout
 @using System.Text.Json;
 @inject IAuthService _authService
 @inject NotificationService _notice
+@inject NavigationManager _navigation
 
 <PageTitle>Get Started :: Kashings</PageTitle>
 
-<div class="auth_container">
-    <Title Level="2">Create an account</Title>
-    <Form Loading="IsLoading"
-          Model="model"
-          Class="auth_form"
-          OnFinish="OnFinish"
-          OnFinishFailed="OnFinishFailed">
+<AuthorizeView>
+    <NotAuthorized>
+        <div class="auth_container">
+            <Title Level="2">Create an account</Title>
+            <Form Loading="IsLoading"
+                  Context="form_context"
+                  Model="model"
+                  Class="auth_form"
+                  OnFinish="OnFinish"
+                  OnFinishFailed="OnFinishFailed">
 
-        <FormItem>
-            <label>First name</label>
-            <Input size="@InputSize.Large" @bind-Value="@context.FirstName" placeholder="John" />
-        </FormItem>
+                <FormItem>
+                    <label>First name</label>
+                    <Input size="@InputSize.Large" @bind-Value="@form_context.FirstName" placeholder="John" />
+                </FormItem>
 
-        <FormItem>
-            <label>Last name</label>
-            <Input size="@InputSize.Large" @bind-Value="@context.LastName" placeholder="Doe" />
-        </FormItem>
+                <FormItem>
+                    <label>Last name</label>
+                    <Input size="@InputSize.Large" @bind-Value="@form_context.LastName" placeholder="Doe" />
+                </FormItem>
 
-        <FormItem>
-            <label>Email address</label>
-            <Input size="@InputSize.Large" @bind-Value="@context.Email" placeholder="johndoe@kashings.com" />
-        </FormItem>
+                <FormItem>
+                    <label>Email address</label>
+                    <Input size="@InputSize.Large" @bind-Value="@form_context.Email" placeholder="johndoe@kashings.com" />
+                </FormItem>
 
-        <FormItem>
-            <label>Password</label>
-            <InputPassword size="@InputSize.Large" @bind-Value="@context.Password" placeholder="Create a strong pwd" />
-        </FormItem>
+                <FormItem>
+                    <label>Password</label>
+                    <InputPassword size="@InputSize.Large" @bind-Value="@form_context.Password" placeholder="Create a strong pwd" />
+                </FormItem>
 
-        <FormItem>
-            <label>Organization name</label>
-            <Input size="@InputSize.Large" @bind-Value="@context.CompanyName" placeholder="Kashings" />
-        </FormItem>
+                <FormItem>
+                    <label>Organization name</label>
+                    <Input size="@InputSize.Large" @bind-Value="@form_context.CompanyName" placeholder="Kashings" />
+                </FormItem>
 
-        <FormItem>
-            <label>Organization email</label>
-            <Input size="@InputSize.Large" @bind-Value="@context.CompanyEmail" placeholder="info@kashings.com" />
-        </FormItem>
+                <FormItem>
+                    <label>Organization email</label>
+                    <Input size="@InputSize.Large" @bind-Value="@form_context.CompanyEmail" placeholder="info@kashings.com" />
+                </FormItem>
 
-        <FormItem>
-            <Button HtmlType="submit"
-                    Type="@ButtonType.Primary"
-                    Size="@ButtonSize.Large"
-                    Block>
-                Continue
-            </Button>
-        </FormItem>
-    </Form>
-</div>
+                <FormItem>
+                    <Button HtmlType="submit"
+                            Type="@ButtonType.Primary"
+                            Size="@ButtonSize.Large"
+                            Block>
+                        Continue
+                    </Button>
+                </FormItem>
+            </Form>
+        </div>
+    </NotAuthorized>
+    <Authorized>
+        @{
+            _navigation.NavigateTo("/", true);
+        }
+    </Authorized>
+</AuthorizeView>
 
 @code {
     bool IsLoading;
@@ -85,8 +95,8 @@
         {
             IsLoading = false;
             await OpenWithPlacement(
-                NotificationPlacement.BottomRight, 
-                NotificationType.Error, 
+                NotificationPlacement.BottomRight,
+                NotificationType.Error,
                 "You have successfully registered. Please check you email and follow instructions.");
         }
     }

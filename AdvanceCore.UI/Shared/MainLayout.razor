@@ -1,3 +1,16 @@
 ﻿@inherits LayoutComponentBase
 
-@Body
+<AuthorizeView>
+    <Authorized>
+        @if(context.User.Identity != null && context.User.Identity.IsAuthenticated)
+        {
+            <Layout Style="min-height: 100vh">
+                <SideNavigation />
+                @Body
+            </Layout>
+        }
+    </Authorized>
+    <NotAuthorized>
+        @Body
+    </NotAuthorized>
+</AuthorizeView>
