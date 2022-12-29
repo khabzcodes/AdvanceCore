@@ -2,6 +2,31 @@
 
 html, body {
     font-family: 'Poppins', sans-serif !important;
+    height: 100vh;
+    margin: 0;
+    padding: 0
+}
+
+.auth_container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)
+}
+
+.auth_form {
+    width: 500px
+}
+
+.ant-btn-primary {
+    min-height: 50px !important;
+    background-color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+.ant-btn-primary:hover {
+    background-color: #000000 !important;
+    border-color: #000000 !important;
 }
 
 #blazor-error-ui .dismiss {

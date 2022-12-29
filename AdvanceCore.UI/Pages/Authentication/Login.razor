@@ -1,0 +1,68 @@
+﻿@page "/login"
+@layout AuthenticationLayout
+@inject IAuthService _authService
+@inject NotificationService _notice
+
+<PageTitle>Login :: Kashings</PageTitle>
+
+<div class="auth_container">
+    <Title Level="2">Welcome Back</Title>
+    <Form Loading="IsLoading"
+          Model="model"
+          Class="auth_form"
+          OnFinish="OnFinish"
+          OnFinishFailed="OnFinishFailed">
+
+        <FormItem>
+            <label>Email address</label>
+            <Input size="@InputSize.Large" @bind-Value="@context.Email" placeholder="johndoe@kashings.com" />
+        </FormItem>
+
+        <FormItem>
+            <label>Password</label>
+            <InputPassword size="@InputSize.Large" @bind-Value="@context.Password" placeholder="Create a strong pwd" />
+        </FormItem>
+
+        <FormItem>
+            <Button HtmlType="submit"
+                    Type="@ButtonType.Primary"
+                    Size="@ButtonSize.Large"
+                    Block>
+                Login to your account
+            </Button>
+        </FormItem>
+    </Form>
+</div>
+
+@code {
+    bool IsLoading;
+
+    private LoginViewModel model = new LoginViewModel();
+
+    private async Task OpenWithPlacement(NotificationPlacement placement, NotificationType notificationType, string? message)
+    {
+        await _notice.Open(new NotificationConfig()
+            {
+                Message = notificationType.ToString(),
+                Description = message,
+                Placement = placement
+            });
+    }
+
+    private async void OnFinish(EditContext editContext)
+    {
+        FluentResults.Result<AuthResponse> response = await _authService.Login(model);
+
+        if (!response.IsSuccess)
+        {
+            string? errorMessage = response.Errors.FirstOrDefault()?.Message;
+
+            await OpenWithPlacement(NotificationPlacement.BottomRight, NotificationType.Error, errorMessage);
+        }
+    }
+
+    private void OnFinishFailed()
+    {
+
+    }
+}

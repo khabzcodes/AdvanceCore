@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
         options.AddPolicy(name: "mySpecificOrigins",
             builder =>
             {
-                builder.WithOrigins("https://localhost:5000")
+                builder.WithOrigins("https://localhost:7012")
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();

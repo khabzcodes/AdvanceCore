@@ -1,0 +1,98 @@
+﻿@page "/register"
+@layout AuthenticationLayout
+@using System.Text.Json;
+@inject IAuthService _authService
+@inject NotificationService _notice
+
+<PageTitle>Get Started :: Kashings</PageTitle>
+
+<div class="auth_container">
+    <Title Level="2">Create an account</Title>
+    <Form Loading="IsLoading"
+          Model="model"
+          Class="auth_form"
+          OnFinish="OnFinish"
+          OnFinishFailed="OnFinishFailed">
+
+        <FormItem>
+            <label>First name</label>
+            <Input size="@InputSize.Large" @bind-Value="@context.FirstName" placeholder="John" />
+        </FormItem>
+
+        <FormItem>
+            <label>Last name</label>
+            <Input size="@InputSize.Large" @bind-Value="@context.LastName" placeholder="Doe" />
+        </FormItem>
+
+        <FormItem>
+            <label>Email address</label>
+            <Input size="@InputSize.Large" @bind-Value="@context.Email" placeholder="johndoe@kashings.com" />
+        </FormItem>
+
+        <FormItem>
+            <label>Password</label>
+            <InputPassword size="@InputSize.Large" @bind-Value="@context.Password" placeholder="Create a strong pwd" />
+        </FormItem>
+
+        <FormItem>
+            <label>Organization name</label>
+            <Input size="@InputSize.Large" @bind-Value="@context.CompanyName" placeholder="Kashings" />
+        </FormItem>
+
+        <FormItem>
+            <label>Organization email</label>
+            <Input size="@InputSize.Large" @bind-Value="@context.CompanyEmail" placeholder="info@kashings.com" />
+        </FormItem>
+
+        <FormItem>
+            <Button HtmlType="submit"
+                    Type="@ButtonType.Primary"
+                    Size="@ButtonSize.Large"
+                    Block>
+                Continue
+            </Button>
+        </FormItem>
+    </Form>
+</div>
+
+@code {
+    bool IsLoading;
+    private RegisterViewModel model = new RegisterViewModel();
+
+    private async Task OpenWithPlacement(NotificationPlacement placement, NotificationType notificationType, string? message)
+    {
+        await _notice.Open(new NotificationConfig()
+            {
+                Message = notificationType.ToString(),
+                Description = message,
+                Placement = placement
+            });
+    }
+
+    private async void OnFinish(EditContext editContext)
+    {
+        IsLoading = true;
+
+        FluentResults.Result<AuthResponse> response = await _authService.RegisterAccount(model);
+
+        if (!response.IsSuccess)
+        {
+            string? errorMessage = response.Errors.FirstOrDefault()?.Message;
+            IsLoading = false;
+            await OpenWithPlacement(NotificationPlacement.BottomRight, NotificationType.Error, errorMessage);
+        }
+        else
+        {
+            IsLoading = false;
+            await OpenWithPlacement(
+                NotificationPlacement.BottomRight, 
+                NotificationType.Error, 
+                "You have successfully registered. Please check you email and follow instructions.");
+        }
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+}
