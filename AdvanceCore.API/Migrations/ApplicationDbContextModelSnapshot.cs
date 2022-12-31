@@ -152,12 +152,15 @@ namespace AdvanceCore.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatorId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -169,7 +172,7 @@ namespace AdvanceCore.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatorId");
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Organizations");
                 });
@@ -397,13 +400,9 @@ namespace AdvanceCore.API.Migrations
 
             modelBuilder.Entity("AdvanceCore.Domain.Entities.Organization", b =>
                 {
-                    b.HasOne("AdvanceCore.Domain.Entities.ApplicationUser", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Creator");
+                    b.HasOne("AdvanceCore.Domain.Entities.ApplicationUser", null)
+                        .WithMany("Organizations")
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("AdvanceCore.Domain.Entities.OrganizationInvite", b =>
@@ -475,6 +474,11 @@ namespace AdvanceCore.API.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AdvanceCore.Domain.Entities.ApplicationUser", b =>
+                {
+                    b.Navigation("Organizations");
                 });
 
             modelBuilder.Entity("AdvanceCore.Domain.Entities.Organization", b =>

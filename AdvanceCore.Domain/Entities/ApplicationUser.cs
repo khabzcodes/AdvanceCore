@@ -20,6 +20,7 @@ public class ApplicationUser : IdentityUser
     public string FirstName { get; set; } = string.Empty;
 
     public string LastName { get; set; } = string.Empty;
+    public List<Organization>? Organizations { get; set; }
 
     public DateTime CreatedAtUtc { get; set; }
 

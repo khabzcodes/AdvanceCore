@@ -32,8 +32,6 @@ public class Organization
     [Required]
     public string CreatorId { get; set; }
 
-    public virtual ApplicationUser Creator { get; set; } = null!;
-
     public virtual ICollection<OrganizationUser> OrganizationUsers { get; set; } = new List<OrganizationUser>();
 
     public DateTime CreatedAtUtc { get; set; }

@@ -29,7 +29,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<AuthRespons
         bool checkPassword = await _userManager.CheckPasswordAsync(user, query.password);
         if (!checkPassword) return CustomErrors.Authentication.IncorrectEmailOrPassword;
 
-        string token = _jwtTokenGenerator.GenerateJwtToken(user.Id);
+        string token = _jwtTokenGenerator.GenerateJwtToken(user.Id, user.Email);
         if (String.IsNullOrEmpty(token)) return Error.Failure();
 
         return new AuthResponse(Token: token);

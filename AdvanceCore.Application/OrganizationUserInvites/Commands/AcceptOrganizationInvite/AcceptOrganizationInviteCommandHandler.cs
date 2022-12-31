@@ -48,7 +48,7 @@ public class AcceptOrganizationInviteCommandHandler : IRequestHandler<AcceptOrga
 
         await _userManager.AddToRoleAsync(user, Constants.UserRole);
 
-        var jwtToken = _jwtTokenGenerator.GenerateJwtToken(user.Id);
+        var jwtToken = _jwtTokenGenerator.GenerateJwtToken(user.Id, user.Email);
 
         OrganizationUser organizationUser = OrganizationUser.Create(
             Guid.NewGuid(),
