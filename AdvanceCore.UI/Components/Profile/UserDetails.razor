@@ -1,0 +1,21 @@
+﻿@inject IUserProfileService _userProfileService
+
+@if (UserProfile != null)
+{
+    <h1>@UserProfile.User.Email</h1>
+}
+
+
+@code {
+    public UserProfileResponse? UserProfile { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        FluentResults.Result<UserProfileResponse> result = await _userProfileService.Profile();
+
+        if (result.IsSuccess)
+        {
+            UserProfile = result.Value;
+        }
+    }
+}

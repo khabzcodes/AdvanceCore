@@ -24,7 +24,9 @@ public class OrganizationRepository : IOrganizationRepository
 
     public Organization? GetById(Guid id)
     {
-        return _context.Organizations.FirstOrDefault(x => x.Id == id);
+        return _context.Organizations
+            .Include(x => x.Departments)
+            .FirstOrDefault(x => x.Id == id);
     }
 
     public List<Organization> GetByUserId(string userId)

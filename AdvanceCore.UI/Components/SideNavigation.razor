@@ -1,7 +1,23 @@
-﻿<Sider>
+﻿@inject IUserProfileService _userProfileService
+
+<Sider>
     <div class="logo" />
+    @if (UserProfile != null)
+    {
+        
+    }
 </Sider>
 
 @code {
+    public UserProfileResponse? UserProfile { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        FluentResults.Result<UserProfileResponse> result = await _userProfileService.Profile();
+
+        if (result.IsSuccess)
+        {
+            UserProfile = result.Value;
+        }
+    }
 }

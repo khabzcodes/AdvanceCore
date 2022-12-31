@@ -143,6 +143,8 @@ namespace AdvanceCore.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrganizationId");
+
                     b.ToTable("Departments");
                 });
 
@@ -151,9 +153,6 @@ namespace AdvanceCore.API.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
@@ -171,8 +170,6 @@ namespace AdvanceCore.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Organizations");
                 });
@@ -222,6 +219,9 @@ namespace AdvanceCore.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDefault")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("OrganizationId")
@@ -398,11 +398,13 @@ namespace AdvanceCore.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AdvanceCore.Domain.Entities.Organization", b =>
+            modelBuilder.Entity("AdvanceCore.Domain.Entities.Department", b =>
                 {
-                    b.HasOne("AdvanceCore.Domain.Entities.ApplicationUser", null)
-                        .WithMany("Organizations")
-                        .HasForeignKey("ApplicationUserId");
+                    b.HasOne("AdvanceCore.Domain.Entities.Organization", null)
+                        .WithMany("Departments")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AdvanceCore.Domain.Entities.OrganizationInvite", b =>
@@ -476,13 +478,10 @@ namespace AdvanceCore.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AdvanceCore.Domain.Entities.ApplicationUser", b =>
-                {
-                    b.Navigation("Organizations");
-                });
-
             modelBuilder.Entity("AdvanceCore.Domain.Entities.Organization", b =>
                 {
+                    b.Navigation("Departments");
+
                     b.Navigation("OrganizationUsers");
                 });
 #pragma warning restore 612, 618

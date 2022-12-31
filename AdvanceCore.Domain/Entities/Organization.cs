@@ -1,6 +1,4 @@
-using System.Data;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AdvanceCore.Domain.Entities;
 
@@ -33,6 +31,7 @@ public class Organization
     public string CreatorId { get; set; }
 
     public virtual ICollection<OrganizationUser> OrganizationUsers { get; set; } = new List<OrganizationUser>();
+    public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
 
     public DateTime CreatedAtUtc { get; set; }
 

@@ -1,6 +1,5 @@
 using AdvanceCore.Application.Persistence;
 using AdvanceCore.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace AdvanceCore.Infrastructure.Persistence;
 
@@ -34,6 +33,16 @@ public class OrganizationUserRepository : IOrganizationUserRepository
     public OrganizationUser? GetByOrganizationIdAndEmail(Guid organizationId, string email)
     {
         return _context.OrganizationUsers.FirstOrDefault(x => x.OrganizationId == organizationId && x.Email == email);
+    }
+
+    public OrganizationUser? GetByUserId(string userId)
+    {
+        return _context.OrganizationUsers.FirstOrDefault(x => x.UserId == userId);
+    }
+
+    public OrganizationUser? GetDefaultOrganizationUser(string userId)
+    {
+        return _context.OrganizationUsers.FirstOrDefault(x => x.UserId == userId && x.IsDefault == true);
     }
 
     public void Update(OrganizationUser organizationUser)

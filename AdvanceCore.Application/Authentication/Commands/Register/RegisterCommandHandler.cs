@@ -59,6 +59,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
             null,
             null,
             true,
+            true,
             DateTime.UtcNow);
 
         _organizationUserRepository.Add(organizationUser);

@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AdvanceCore.Domain.Entities;
 
@@ -14,6 +13,7 @@ public class OrganizationUser
         string? primaryContactNumber,
         string? secondaryContactNumber,
         bool isActive,
+        bool isDefault,
         DateTime createdAtUtc)
     {
         Id = id;
@@ -24,6 +24,7 @@ public class OrganizationUser
         PrimaryContactNumber = primaryContactNumber;
         SecondaryContactNumber = secondaryContactNumber;
         IsActive = isActive;
+        IsDefault = isDefault;
         CreatedAtUtc = createdAtUtc;
     }
 
@@ -44,6 +45,8 @@ public class OrganizationUser
 
     public bool IsActive { get; set; } = false;
 
+    public bool IsDefault { get; set; }
+
     public DateTime CreatedAtUtc { get; set; }
 
     public static OrganizationUser Create(
@@ -55,9 +58,10 @@ public class OrganizationUser
         string? primaryContactNumber,
         string? secondaryContactNumber,
         bool isActive,
+        bool isDefault,
         DateTime createdAtUtc)
     {
-        OrganizationUser organizationUser = new OrganizationUser(
+        OrganizationUser organizationUser = new(
             id,
             organizationId,
             userId,
@@ -66,6 +70,7 @@ public class OrganizationUser
             primaryContactNumber,
             secondaryContactNumber,
             isActive,
+            isDefault,
             createdAtUtc);
 
         return organizationUser;
