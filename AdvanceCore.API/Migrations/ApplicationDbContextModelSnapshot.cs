@@ -143,6 +143,8 @@ namespace AdvanceCore.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrganizationId");
+
                     b.ToTable("Departments");
                 });
 
@@ -157,7 +159,7 @@ namespace AdvanceCore.API.Migrations
 
                     b.Property<string>("CreatorId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -168,8 +170,6 @@ namespace AdvanceCore.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
 
                     b.ToTable("Organizations");
                 });
@@ -219,6 +219,9 @@ namespace AdvanceCore.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDefault")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("OrganizationId")
@@ -395,15 +398,13 @@ namespace AdvanceCore.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AdvanceCore.Domain.Entities.Organization", b =>
+            modelBuilder.Entity("AdvanceCore.Domain.Entities.Department", b =>
                 {
-                    b.HasOne("AdvanceCore.Domain.Entities.ApplicationUser", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId")
+                    b.HasOne("AdvanceCore.Domain.Entities.Organization", null)
+                        .WithMany("Departments")
+                        .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("AdvanceCore.Domain.Entities.OrganizationInvite", b =>
@@ -479,6 +480,8 @@ namespace AdvanceCore.API.Migrations
 
             modelBuilder.Entity("AdvanceCore.Domain.Entities.Organization", b =>
                 {
+                    b.Navigation("Departments");
+
                     b.Navigation("OrganizationUsers");
                 });
 #pragma warning restore 612, 618

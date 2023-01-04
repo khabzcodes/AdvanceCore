@@ -48,7 +48,22 @@ public class AcceptOrganizationInviteCommandHandler : IRequestHandler<AcceptOrga
 
         await _userManager.AddToRoleAsync(user, Constants.UserRole);
 
-        var jwtToken = _jwtTokenGenerator.GenerateJwtToken(user.Id);
+        var jwtToken = _jwtTokenGenerator.GenerateJwtToken(user.Id, user.Email);
+
+        OrganizationUser? defaultOrganizationUser = _organizationUserRepository.GetDefaultOrganizationUser(user.Id);
+
+        bool isDefaultOrganization;
+        if (defaultOrganizationUser is null)
+        {
+            isDefaultOrganization = true;
+        }
+        else
+        {
+            defaultOrganizationUser.IsDefault = false;
+            _organizationUserRepository.Update(defaultOrganizationUser);
+
+            isDefaultOrganization = true;
+        }
 
         OrganizationUser organizationUser = OrganizationUser.Create(
             Guid.NewGuid(),
@@ -59,6 +74,7 @@ public class AcceptOrganizationInviteCommandHandler : IRequestHandler<AcceptOrga
             null,
             null,
             true,
+            isDefaultOrganization,
             DateTime.UtcNow);
 
         _organizationUserRepository.Add(organizationUser);

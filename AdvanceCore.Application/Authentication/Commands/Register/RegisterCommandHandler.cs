@@ -39,7 +39,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
 
         await _userManager.AddToRoleAsync(user, Constants.UserRole);
 
-        var jwtToken = _jwtTokenGenerator.GenerateJwtToken(user.Id);
+        var jwtToken = _jwtTokenGenerator.GenerateJwtToken(user.Id, user.Email);
 
         Organization organization = Organization.Create(
             Guid.NewGuid(),
@@ -58,6 +58,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
             Constants.OrganizationAdministrator,
             null,
             null,
+            true,
             true,
             DateTime.UtcNow);
 
