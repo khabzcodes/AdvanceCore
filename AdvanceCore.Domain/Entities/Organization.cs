@@ -32,6 +32,7 @@ public class Organization
 
     public virtual ICollection<OrganizationUser> OrganizationUsers { get; set; } = new List<OrganizationUser>();
     public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
+    public virtual ICollection<Client> Clients { get; set; } = new List<Client>();
 
     public DateTime CreatedAtUtc { get; set; }
 
